@@ -12,7 +12,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 1500;
+  int _counter = 5;
 
   void _incrementCounter() {
     setState(() {
@@ -30,31 +30,30 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void startTimer() {
-    isActive = true;
+    print('isActive: $isActive');
     const oneSec = const Duration(seconds: 1);
 
     _timer = new Timer.periodic(
       oneSec,
       (Timer timer) {
         if (_counter == 0) {
-          setState(() {
-            timer.cancel();
-          });
+          if (isActive) {
+            setState(() {
+              isActive = false;
+              _counter = 3;
+            });
+          } else {
+            setState(() {
+              isActive = false;
+              timer.cancel();
+            });
+          }
         } else {
           print('tiktok');
           setState(() {
             _counter -= 1;
           });
         }
-        // if (timeLeft.s) {
-        // setState(() {
-        //   timer.cancel();
-        // });
-        // } else {
-        //   setState(() {
-        //     // _start--;
-        //   });
-        // }
       },
     );
   }
@@ -71,6 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Spacer(),
+          if (!_timer.isActive) Text("FINISHED"),
           Text(
             'POMODORO TIMER:',
             style: TextStyle(
@@ -89,7 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               TextButton(
                 onPressed: () {
-                  if (isActive == false) startTimer();
+                  if (isActive == false) {
+                    isActive = true;
+                    _counter = 5;
+                    startTimer();
+                  }
                 },
                 child: Text(
                   'START',
@@ -102,11 +106,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   setState(() {
                     isActive = false;
-                    _timer.cancel();
+                    _counter = 3;
                   });
                 },
                 child: Text(
-                  'STOP',
+                  'BREAK',
                   style: TextStyle(
                     color: Colors.black,
                   ),
@@ -116,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   setState(() {
                     isActive = false;
-                    _counter = 1500;
+                    _counter = 5;
                     _timer.cancel();
                   });
                 },
